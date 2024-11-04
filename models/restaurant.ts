@@ -1,8 +1,7 @@
-require('mongoose');
-const {Schema,model} = mongoose;
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
 
 const AboutSchema = new Schema({
-  id: { type: mongoose.Schema.Types.ObjectId, required: true },
   description: { type: String, required: true },
   averagePrice: { type: Number, required: true },
   hrsOfOperation: { type: String, required: true },
@@ -11,7 +10,6 @@ const AboutSchema = new Schema({
 });
 
 const MenuItemSchema = new Schema({
-  id: { type: mongoose.Schema.Types.ObjectId, required: true },
   image: { type: String, required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
@@ -27,27 +25,26 @@ const ReviewSchema = new Schema({
 });
 
 const MenuSchema = new Schema({
-  breakfast: [MenuItemSchema],
-  lunch: [MenuItemSchema],
-  dinner: [MenuItemSchema],
+  breakfast: { type: [MenuItemSchema], default: [] },
+  lunch: { type: [MenuItemSchema], default: [] },
+  dinner: { type: [MenuItemSchema], default: [] },
 });
 
 const RestaurantDataSchema = new Schema({
-  id: { type: mongoose.Schema.Types.ObjectId, required: true },
   image: { type: String, required: true },
   restaurantName: { type: String, required: true },
   location: { type: String, required: true },
   latitude: { type: Number, required: true },
   longitude: { type: Number, required: true },
   rate: { type: Number, required: true },
-  about: [AboutSchema],
-  menu: MenuSchema,
-  review: [ReviewSchema]
+  about: { type: [AboutSchema], required: true },
+  menu: { type: MenuSchema, default: {} }, // Optional, can be added later
+  review: { type: [ReviewSchema], default: [] }, // Optional, can be added later
 });
 
 const RestaurantSchema = new Schema({
   title: { type: String, required: true },
-  data: [RestaurantDataSchema],
+  data: { type: [RestaurantDataSchema], required: true },
 });
 
 const Restaurant = model('Restaurant', RestaurantSchema);
