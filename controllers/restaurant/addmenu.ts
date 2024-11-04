@@ -1,41 +1,55 @@
-const Menu = require("../models/Menu");
+import { Request, Response } from 'express';
 
-const createMenu = async (req, res) => {
-  const { restaurantId, title, name, quantity, cost, image } = req.query;
-  console.log(req.body)
+const Restaurant = require('../../models/restaurant');
+
+// Define an interface for the request body to ensure type safety
+interface NewMenuItem {
+  name: string;
+  description: string;
+  cost: number;
+  rate: number;
+  image: string;
+}
+
+const addMenu = async (req: Request, res: Response) => {
+  const { id, menuType } = req.params;
+  const newMenuItem: NewMenuItem = req.body;
+  console.log(id,menuType,newMenuItem)
+
+  // Validate the input
+  if (!newMenuItem || !newMenuItem.name || !newMenuItem.cost) {
+    return res.status(400).json({ message: 'Invalid menu item data' });
+  }
 
   try {
-    const menu = await Menu.findOne({ restaurantId });
-
-    if (menu) {
-      // Update the existing menu with new data
-      menu.data.push({
-        title,
-        description: [{ name, quantity, cost, image }],
-      });
-      await menu.save();
-      return res.status(200).json({ message: "Menu updated successfully", menu });
+    // Determine the correct path based on menuType
+    let updatePath;
+    if (menuType === 'breakfast') {
+      updatePath = 'data.0.menu.breakfast';
+    } else if (menuType === 'lunch') {
+      updatePath = 'data.0.menu.lunch';
+    } else if (menuType === 'dinner') {
+      updatePath = 'data.0.menu.dinner';
     } else {
-      // Create a new menu
-      const newMenu = new Menu({
-        restaurantId,
-        data: [
-          {
-            title,
-            description: [{ name, quantity, cost, image }],
-          },
-        ],
-      });
-
-      await newMenu.save();
-      return res.status(201).json({ message: "Menu created successfully", menu: newMenu });
+      return res.status(400).json({ message: 'Invalid menu type' });
     }
+
+    // Update the restaurant document
+    const updatedRestaurant = await Restaurant.findByIdAndUpdate(
+      id,
+      { $set: { [updatePath]: newMenuItem } }, // Use $push to add the new item to the specified array
+      { new: true }
+    );
+
+    if (!updatedRestaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
+    res.status(201).json({ message: 'Menu item added successfully', restaurant: updatedRestaurant });
   } catch (error) {
-    console.error("Error creating menu:", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error('Error adding menu item:', error);
+    res.status(500).json({ message: 'Error adding menu item', error });
   }
 };
 
-module.exports = {
-  createMenu,
-};
+module.exports = addMenu;
