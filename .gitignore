@@ -3,5 +3,14 @@ node_modules/
 package.json
 package-lock.json
 
+//middleware
+middleware/
+
+// lib/func service
+lib/
+
+//tsc
+dist/
+
 //dotenv
 .env
