@@ -1,11 +1,11 @@
-import GenerateSecretKey from '../../../lib/GenerateSecretKey';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { Request, Response } from 'express';
+import GenerateSecretKey from "../../../lib/GenerateSecretKey";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { Request, Response } from "express";
 
-const AdminAuth = require('../../../models/admin');
+const sendSigninEmail = require("../../../services/email");
+const AdminAuth = require("../../../models/admin");
 
-// Ensure the key is being read correctly from the environment variables
 const secretKey = process.env.JWT_SECRET_KEY || GenerateSecretKey();
 
 const loginAdmin = async (req: Request, res: Response) => {
@@ -17,7 +17,6 @@ const loginAdmin = async (req: Request, res: Response) => {
     if (!admin) {
       return res.status(401).json({ message: "Incorrect Email/Password" });
     }
-
     const isPasswordMatch = await bcrypt.compare(password, admin.password);
 
     if (!isPasswordMatch) {
@@ -28,19 +27,31 @@ const loginAdmin = async (req: Request, res: Response) => {
       expiresIn: "24h",
     });
 
-    res.status(200).json({
+    // Send email
+    await sendSigninEmail(email);
+
+    return res.status(200).json({
       token,
       user: {
         userId: admin._id,
         name: admin.name,
         email: admin.email,
         phoneNumber: admin.phoneNumber,
-        restaurantId: admin.restaurantId || null, 
+        restaurantId: admin.restaurantId || null,
       },
     });
   } catch (error) {
-    res.status(500).json({ message: "Error occurred during login" });
-    console.log("Error occurred during login:", error);
+    console.error("Error occurred during login:", error);
+
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Unexpected error occurred during login";
+
+    res.status(500).json({
+      message: errorMessage,
+      details: process.env.NODE_ENV === "development" ? error : undefined,
+    });
   }
 };
 
