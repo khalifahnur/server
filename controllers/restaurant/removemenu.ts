@@ -1,42 +1,44 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
+import mongoose from "mongoose";
 
-const Restaurant = require('../../models/restaurant');
+const Restaurant = require("../../models/restaurant");
 
-const deleteMenuItem = async (req: Request, res: Response) => {
-  const { id, menuType, itemId } = req.params;
+interface AuthenticatedRequest extends Request {
+  restaurantId?: {
+    id: string;
+  };
+}
+
+const deleteMenuItem = async (req: AuthenticatedRequest, res: Response) => {
+  const { menuType, itemId } = req.params;
+  const restaurantId = req.restaurantId;
 
   try {
-    // Determine the correct path based on menuType
-    let updatePath;
-    if (menuType === 'breakfast') {
-      updatePath = 'data.0.menu.0.breakfast';
-    } else if (menuType === 'lunch') {
-      updatePath = 'data.0.menu.0.lunch';
-    } else if (menuType === 'dinner') {
-      updatePath = 'data.0.menu.0.dinner';
-    } else {
-      return res.status(400).json({ message: 'Invalid menu type' });
+    const validMenuTypes = ["breakfast", "lunch", "dinner"];
+    if (!validMenuTypes.includes(menuType)) {
+      return res.status(400).json({ message: "Invalid menu type" });
     }
 
-    // Use $pull to remove the specific item from the menu array
-    const updatedRestaurant = await Restaurant.findByIdAndUpdate(
-      id,
+    const updatePath = `data.0.menu.${menuType}`;
+
+    const updatedRestaurant = await Restaurant.findOneAndUpdate(
+      { _id: restaurantId },
       {
         $pull: {
-          [updatePath]: { _id: itemId } // Remove the item with the matching itemId
-        }
+          [updatePath]: { _id: new mongoose.Types.ObjectId(itemId) },
+        },
       },
       { new: true }
     );
 
     if (!updatedRestaurant) {
-      return res.status(404).json({ message: 'Restaurant or menu item not found' });
+      return res.status(404).json({ message: "Restaurant not found" });
     }
 
-    res.status(200).json({ message: 'Menu item deleted successfully', restaurant: updatedRestaurant });
+    return res.status(200).json({ message: "Menu item deleted successfully" });
   } catch (error) {
-    console.error('Error deleting menu item:', error);
-    res.status(500).json({ message: 'Error deleting menu item', error });
+    console.error("Error deleting menu item:", error);
+    return res.status(500).json({ message: "Error deleting menu item", error });
   }
 };
 
