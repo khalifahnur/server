@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
+const Restaurant = require("../../models/restaurant");
+const AdminAuth = require("../../models/admin");
 
-const Restaurant = require('../../models/restaurant');
-const AdminAuth = require('../../models/admin');
+import { uploadImageToCloudinary } from "../../lib/UploadImage";
 
-// Define an interface for the request body
+// Define an interface for the expected request body
 interface InitialRestaurantData {
   title: string;
   data: {
@@ -19,7 +20,7 @@ interface InitialRestaurantData {
       hrsOfOperation: string;
       phone: string;
       email: string;
-    }[];
+    };
   }[];
 }
 
@@ -31,30 +32,51 @@ interface AuthenticatedRequest extends Request {
 }
 
 const addRestaurantData = async (req: AuthenticatedRequest, res: Response) => {
-  const { title, data } = req.body;
-
-  if (!title) {
-    return res.status(400).json({ message: 'Title is required' });
-  }
-
   try {
+
+    if (!req.body.data) {
+      return res.status(400).json({ message: "Data is invalid or empty" });
+    }
+
+    const parsedData = JSON.parse(req.body.data);
+
+    const { title, data } = parsedData;
+
+    if (!title) {
+      return res.status(400).json({ message: "Title is required" });
+    }
+
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      return res.status(400).json({ message: "Data is invalid or empty" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Image file is required" });
+    }
+    
+    const uploadedImageUrl = await uploadImageToCloudinary(req.file);
+    data[0].image = uploadedImageUrl;
+
     const newRestaurant = new Restaurant({ title, data });
     const savedRestaurant = await newRestaurant.save();
 
-    // Access user ID from req.user
     const userId = req.user?.id;
 
     if (userId) {
-      await AdminAuth.findByIdAndUpdate(userId, { restaurantId: savedRestaurant._id });
+      await AdminAuth.findByIdAndUpdate(userId, {
+        restaurantId: savedRestaurant._id,
+      });
     }
 
     res.status(201).json({
-      message: 'Restaurant data added successfully',
+      message: "Restaurant data added successfully",
       restaurant: savedRestaurant,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error adding restaurant data', error });
+    console.error("Error adding restaurant data:", error);
+    res.status(500).json({ message: "Error adding restaurant data", error });
   }
 };
+
 
 module.exports = addRestaurantData;
