@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
+import { uploadMenuToCloudinary } from "../../lib/UploadImage";
 
-const Restaurant = require('../../models/restaurant');
+const Restaurant = require("../../models/restaurant");
 
-// Define an interface for the request body to ensure type safety
 interface NewMenuItem {
   name: string;
   description: string;
@@ -11,44 +11,56 @@ interface NewMenuItem {
   image: string;
 }
 
-const addMenu = async (req: Request, res: Response) => {
-  const { id, menuType } = req.params;
-  const newMenuItem: NewMenuItem = req.body;
-  console.log(id,menuType,newMenuItem)
+interface AuthenticatedRequest extends Request {
+  restaurantId?: {
+    id: string;
+  };
+}
 
-  // Validate the input
+const addMenu = async (req: AuthenticatedRequest, res: Response) => {
+  const { menuType } = req.params;
+  const newMenuItem: NewMenuItem = req.body;
+  const restaurantId = req.restaurantId;
+
   if (!newMenuItem || !newMenuItem.name || !newMenuItem.cost) {
-    return res.status(400).json({ message: 'Invalid menu item data' });
+    return res.status(400).json({ message: "Invalid menu item data" });
   }
 
+  if (!req.file) {
+    return res.status(400).json({ message: "Image file is required" });
+  }
+  
+  const uploadedImageUrl = await uploadMenuToCloudinary(req.file);
+
+  newMenuItem.image = uploadedImageUrl;
+
+
   try {
-    // Determine the correct path based on menuType
     let updatePath;
-    if (menuType === 'breakfast') {
-      updatePath = 'data.0.menu.breakfast';
-    } else if (menuType === 'lunch') {
-      updatePath = 'data.0.menu.lunch';
-    } else if (menuType === 'dinner') {
-      updatePath = 'data.0.menu.dinner';
+    if (menuType === "breakfast") {
+      updatePath = "data.0.menu.breakfast";
+    } else if (menuType === "lunch") {
+      updatePath = "data.0.menu.lunch";
+    } else if (menuType === "dinner") {
+      updatePath = "data.0.menu.dinner";
     } else {
-      return res.status(400).json({ message: 'Invalid menu type' });
+      return res.status(400).json({ message: "Invalid menu type" });
     }
 
-    // Update the restaurant document
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
-      id,
-      { $set: { [updatePath]: newMenuItem } }, // Use $push to add the new item to the specified array
+      restaurantId,
+      { $push: { [updatePath]: newMenuItem } },
       { new: true }
     );
 
     if (!updatedRestaurant) {
-      return res.status(404).json({ message: 'Restaurant not found' });
+      return res.status(404).json({ message: "Restaurant not found" });
     }
 
-    res.status(201).json({ message: 'Menu item added successfully', restaurant: updatedRestaurant });
+    res.status(201).json({ message: "Menu item added successfully" });
   } catch (error) {
-    console.error('Error adding menu item:', error);
-    res.status(500).json({ message: 'Error adding menu item', error });
+    console.error("Error adding menu item:", error);
+    res.status(500).json({ message: "Error adding menu item", error });
   }
 };
 
