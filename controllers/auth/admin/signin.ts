@@ -27,10 +27,18 @@ const loginAdmin = async (req: Request, res: Response) => {
       expiresIn: "24h",
     });
 
+    // Set the token in a cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     // Send email
-    await sendSigninEmail(email);
+    // await sendSigninEmail(email);
 
     return res.status(200).json({
+      message: "Login successful",
       token,
       user: {
         userId: admin._id,
