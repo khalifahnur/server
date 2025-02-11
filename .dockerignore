@@ -1,0 +1,5 @@
+node_module
+*.log
+.git
+docker-compose.yml
+.env
