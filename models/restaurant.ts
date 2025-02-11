@@ -38,8 +38,8 @@ const RestaurantDataSchema = new Schema({
   longitude: { type: Number, required: true },
   rate: { type: Number, required: true },
   about: { type: [AboutSchema], required: true },
-  menu: { type: MenuSchema, default: {} }, // Optional, can be added later
-  review: { type: [ReviewSchema], default: [] }, // Optional, can be added later
+  menu: { type: MenuSchema, default: {} },
+  review: { type: [ReviewSchema], default: [] },
 });
 
 const RestaurantSchema = new Schema({
