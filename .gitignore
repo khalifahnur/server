@@ -1,13 +1,5 @@
 //node_modules
 node_modules/
-package.json
-package-lock.json
-
-//middleware
-middleware/
-
-// lib/func service
-lib/
 
 //tsc
 dist/
