@@ -27,7 +27,7 @@ const io = new Server(server, {
   },
 });
 
-const PORT = process.env.PORT || 3003;
+const port = process.env.PORT || 3003;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
 const corsOptions = {
@@ -133,8 +133,8 @@ app.use("/swiftab/orders", orderrouter);
 setupWebSocket(io);
 // Event listener for connection
 server
-  .listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
+  .listen(port, () => {
+    console.log(`Listening on port ${port}`);
   })
   .on("error", (err: Error) => {
     console.error("Server error:", err);
