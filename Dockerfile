@@ -17,7 +17,7 @@
 # # Start the application
 # CMD ["npx", "ts-node", "index.ts"]
 
-FROM node:18
+FROM node:18-alpine
 
 # Set working directory to the server folder
 WORKDIR /app/server
@@ -26,7 +26,7 @@ WORKDIR /app/server
 COPY ../package.json ../package-lock.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --only=production
 
 # Copy the entire server directory
 COPY . .
@@ -35,5 +35,5 @@ COPY . .
 EXPOSE 3000 3002 3000 9092 2181
 
 # Run TypeScript with ts-node
-CMD ["npx", "ts-node", "index.ts"]
+CMD ["npx", "ts-node", "index.ts","--max-old-space-size=256"]
 
