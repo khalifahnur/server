@@ -1,16 +1,18 @@
+import moment from "moment-timezone";
 import cron from "node-cron";
 
 const Reservation = require("../../models/reservation");
 
 const startReservationCronJob = () => {
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("5 * * * *", async () => {
     console.log("Running reservation status update job...");
     try {
-      const now = new Date();
+      const nowInNairobi = moment.tz("Africa/Nairobi");
+
       const result = await Reservation.updateMany(
         {
           status: "active",
-          "reservationInfo.endTime": { $lte: now },
+          "reservationInfo.endTime": { $lte: nowInNairobi },
         },
         { $set: { status: "completed" } }
       );
