@@ -29,7 +29,7 @@ COPY ./server/package.json ./server/package-lock.json ./
 RUN npm install
 
 # Copy the entire server directory
-COPY server . 
+COPY . .
 
 # Expose necessary ports
 EXPOSE 3000 3002 3000 9092 2181
