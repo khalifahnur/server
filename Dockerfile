@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Expose necessary ports
-EXPOSE 3000 9092 2181
+EXPOSE 3002 3000 9092 2181
 
 # Start the application
-CMD ["node", "index.ts"] # Change to your main entry file
+CMD ["npx", "ts-node", "server/index.ts"]
