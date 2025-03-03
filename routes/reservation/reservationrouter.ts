@@ -8,19 +8,32 @@ const UserActiveController = require("../../controllers/reservation/userReservat
 const UserCompletedController = require("../../controllers/reservation/userReservation/completed");
 const UserCancelledController = require("../../controllers/reservation/userReservation/cancelled");
 
+// dash
+// const RevenueController = require("../../controllers/order/dash/totalrevenue");
+// const TotalCustomerController = require("../../controllers/reservation/dash/totalcustomers");
+// const AvailableTableController = require("../../controllers/reservation/dash/tableavailability");
+// const TodayReservationController = require("../../controllers/reservation/dash/todayreservation");
+
 const UserUpdateStatus = require("../../controllers/reservation/userReservation/cancelreservation");
 
 const attachRestaurantId = require("../../middleware/attachRestaurantId");
 
+const testController = require("../../controllers/test");
+
 const router = express.Router();
 
+router.post("/test-message", testController);
 // Post reservation
 router.post("/:userId/reserve/:restaurantId/:fcmToken", ReserveController);
 
 router.post("/fetched-active", FetchActiveTables);
 
 // Admin routes
-router.get("/fetch-all-reservations", attachRestaurantId, GetUserController.getAllUserReservation);
+router.get(
+  "/fetch-all-reservations",
+  attachRestaurantId,
+  GetUserController.getAllUserReservation
+);
 router.get(
   "/:restaurantId/reservations/active",
   GetUserController.getUserActiveReservation
@@ -29,6 +42,26 @@ router.get(
   "/:restaurantId/reservations/cancelled",
   GetUserController.getUserCancelledReservation
 );
+// router.get(
+//   "/get-revenue",
+//   attachRestaurantId,
+//   RevenueController
+// );
+// router.get(
+//   "/total-customer",
+//   attachRestaurantId,
+//   TotalCustomerController
+// );
+// router.get(
+//   "/available-tables",
+//   attachRestaurantId,
+//   AvailableTableController
+// );
+// router.get(
+//   "/fetch-today-reservations",
+//   attachRestaurantId,
+//   TodayReservationController
+//);
 
 // User routes
 router.get("/:userId/completed", UserCompletedController);

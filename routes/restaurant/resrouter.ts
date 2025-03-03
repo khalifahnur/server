@@ -14,6 +14,9 @@ const getMenu = require("../../controllers/restaurant/getmenurestaurant");
 const FetchAllRestaurants = require("../../controllers/restaurant/fetchrestaurants");
 const FetchResNearMe = require("../../controllers/restaurant/fetchresnearme");
 
+const PostRecentlyViewed = require("../../controllers/view-recently/view");
+const FetchRecentlyView = require("../../controllers/view-recently/fetchView")
+
 
 router.post("/addrestaurant", authenticateUser,upload.single("image"), AddContoller);
 
@@ -24,5 +27,9 @@ router.get("/menu",attachRestaurantId,getMenu);
 
 router.get("/fetch-all-restaurants",FetchAllRestaurants);
 router.post("/fetch-restaurants-near-me",FetchResNearMe);
+
+//fetch-recently
+router.post("/recently-viewed-restaurants", PostRecentlyViewed)
+router.get("/fetch-recently-viewed-restaurants/:userId", FetchRecentlyView)
 
 module.exports = router;
