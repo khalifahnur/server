@@ -31,6 +31,8 @@ RUN npm install --only=production
 # Copy the entire server directory
 COPY . .
 
+RUN npm run build
+
 # Expose necessary ports
 EXPOSE 3000 3002 3000 9092 2181
 
