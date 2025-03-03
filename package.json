@@ -4,8 +4,9 @@
     "description": "swiftab restful api",
     "main": "index.ts",
     "scripts": {
-    "dev": "nodemon --exec ts-node ./index.ts",
-    "start": "node -r ts-node/register index.ts"
+        "build": "tsc",
+        "dev": "nodemon --exec ts-node ./index.ts",
+        "start": "node -r ts-node/register index.ts"
     },
     "author": "",
     "license": "ISC",
