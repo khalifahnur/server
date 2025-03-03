@@ -4,6 +4,9 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import http from "http";
+import { Server } from "socket.io";
+import setupWebSocket from "./sockets/socket";
 
 import "./lib/SecretKeyConfig";
 import "./lib/SecretKeyConfigUser";
@@ -13,6 +16,17 @@ const startReservationCronJob = require("./controllers/reservation/reservationup
 dotenv.config();
 
 const app = express();
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:3000", "http://192.168.100.197:3002"],
+    methods: ["GET", "POST"],
+    credentials:true,
+  },
+});
+
 const PORT = process.env.PORT || 3003;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
@@ -45,6 +59,8 @@ const userauthrouter = require("./routes/user/userrouter");
 const reservationrouter = require("./routes/reservation/reservationrouter");
 const tablerouter = require("./routes/table/tablerouter");
 const paymentrouter = require("./routes/payment/paymentrouter");
+const waiterrouter = require("./routes/waiter/waiterrouter");
+const orderrouter = require("./routes/order/orderroute");
 
 /**
  * /swiftab/restaurant/addrestaurant/
@@ -73,6 +89,13 @@ app.use("/swiftab/auth/admin", adminauthrouter);
 app.use("/swiftab/auth/user", userauthrouter);
 
 /**
+ * /swiftab/auth/waiter/waiter-signup
+ * /swiftab/auth/waiter/waiter-app-signin
+ * /swiftab/auth/waiter/waiter-new-password
+ */
+app.use("/swiftab/auth/waiter", waiterrouter);
+
+/**
  * /swiftab/reservation/:userId/reserve/:restaurantId
  * /swiftab/reservation/:restaurantId
  * /swiftab/reservation/:userId/active |cancelled | completed
@@ -96,8 +119,20 @@ app.use("/swiftab/table", tablerouter);
  */
 app.use("/swiftab/payment", paymentrouter);
 
+/**
+ * /swiftab/orders/take-order-route
+ * /swiftab/orders/fetch-all-order/:restaurantId
+ * /swiftab/orders/fetch-served-order/:restaurantId
+ * /swiftab/orders/fetch-not-served-order/:restaurantId
+ * /swiftab/orders/fetch-paid-order/:restaurantId
+ * /swiftab/orders/fetch-un-paid-order/:restaurantId
+ * /swiftab/orders/fetch-latest-order/:restaurantId
+ */
+app.use("/swiftab/orders", orderrouter);
+
+setupWebSocket(io);
 // Event listener for connection
-app
+server
   .listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
   })
