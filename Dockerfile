@@ -23,7 +23,7 @@ FROM node:18
 WORKDIR /app/server
 
 # Copy package.json and package-lock.json first
-COPY ./server/package.json ./server/package-lock.json ./
+COPY ../package.json ../package-lock.json ./
 
 # Install dependencies
 RUN npm install
