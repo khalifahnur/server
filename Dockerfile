@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 3002 3000 9092 2181
 
 # Start the application
-CMD ["npx", "ts-node", "server/index.ts"]
+CMD ["npx", "ts-node", "index.ts"]
