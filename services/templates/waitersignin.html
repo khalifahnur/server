@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swiftab-Waiter App Sign-In Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dddddd;
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0;
+        }
+        .header img {
+            width: 100px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content p {
+            line-height: 1.6;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://i.imgur.com/5NmVmyA.png" title="source: imgur.com" referrerpolicy="no-referrer" />
+        </div>
+        <div class="content">
+            <p>We’re verifying a recent sign-in for waiter <strong>{{email}}</strong> via Swiftab-Waiter App:</p>
+            <!-- <p><strong>Timestamp:</strong> 2024-11-04 03:57:06 GMT<br>
+            <strong>IP Address:</strong> 41.90.36.246</p> -->
+            <p>You’re receiving this message because of a successful sign-in from a device that we didn’t recognize. If you believe that this sign-in is suspicious, <a href="https://www.mongodb.com/reset-password">please reset your password immediately</a>.</p>
+            <p>If you’re aware of this sign-in, please disregard this notice. This can happen when you use your browser’s incognito or private browsing mode or clear your cookies.</p>
+            <p>Thanks,<br>Swiftab Team</p>
+        </div>
+        <div class="footer">
+            <p>This message was sent from Swiftab, Inc., Nairobi</p>
+        </div>
+    </div>
+</body>
+</html>
