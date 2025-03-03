@@ -35,7 +35,7 @@ const loginAdmin = async (req: Request, res: Response) => {
     });
 
     // Send email
-    // await sendSigninEmail(email);
+    await sendSigninEmail(email);
 
     return res.status(200).json({
       message: "Login successful",
