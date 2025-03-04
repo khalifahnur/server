@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 const Order = require("../../models/order");
 
-const sendOrderNotification = require("../../kafka/producer/orderProducer");
+//const sendOrderNotification = require("../../kafka/producer/orderProducer");
 
 import { GenerateOrderId } from "../../lib/GenerateOrderId";
 
