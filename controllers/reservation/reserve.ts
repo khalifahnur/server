@@ -3,7 +3,7 @@ import { GenerateReservationID } from "../../lib/GenerateReservationID";
 
 const Reservation = require("../../models/reservation");
 const sendFirebaseNotification = require("../../firebase/fcmService");
-const sendReservationNotification = require("../../kafka/producer/reservationProducer");
+//const sendReservationNotification = require("../../kafka/producer/reservationProducer");
 
 const reservation = async (req: Request, res: Response) => {
   const { userId, restaurantId, fcmToken } = req.params;
@@ -68,31 +68,31 @@ const reservation = async (req: Request, res: Response) => {
 
     const deviceToken = fcmToken;
 
-    const notificationData = {
-      userId,
-      deviceToken,
-      reservationId: reservationID,
-      date: responseData.date,
-      time: responseData.time,
-      guest: savedReservation.reservationInfo.guest,
-      restaurantName
-    };
+    // const notificationData = {
+    //   userId,
+    //   deviceToken,
+    //   reservationId: reservationID,
+    //   date: responseData.date,
+    //   time: responseData.time,
+    //   guest: savedReservation.reservationInfo.guest,
+    //   restaurantName
+    // };
 
-    await sendReservationNotification(notificationData)
+    // await sendReservationNotification(notificationData)
 
-    //  // Expecting the device token in the request body
-    // if (!deviceToken) {
-    //   console.warn("No device token provided for notification.");
-    // } else {
-    //   const title = "Reservation Confirmed";
-    //   const body = `Your reservation is confirmed for ${responseData.date} at ${responseData.time}.`;
+     // Expecting the device token in the request body
+    if (!deviceToken) {
+      console.warn("No device token provided for notification.");
+    } else {
+      const title = "Reservation Confirmed";
+      const body = `Your reservation is confirmed for ${responseData.date} at ${responseData.time}.`;
 
-    //   // Send Firebase Notification
-    //   await sendFirebaseNotification(deviceToken, title, body, {
-    //     reservationId: reservationID,
-    //     guest: String(savedReservation.reservationInfo.guest),
-    //   });
-    // }
+      // Send Firebase Notification
+      await sendFirebaseNotification(deviceToken, title, body, {
+        reservationId: reservationID,
+        guest: String(savedReservation.reservationInfo.guest),
+      });
+    }
 
     res.status(201).json({message:"successfully reserved",responseData});
   } catch (error) {
