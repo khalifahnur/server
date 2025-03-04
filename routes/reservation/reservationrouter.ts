@@ -18,11 +18,9 @@ const UserUpdateStatus = require("../../controllers/reservation/userReservation/
 
 const attachRestaurantId = require("../../middleware/attachRestaurantId");
 
-const testController = require("../../controllers/test");
 
 const router = express.Router();
 
-router.post("/test-message", testController);
 // Post reservation
 router.post("/:userId/reserve/:restaurantId/:fcmToken", ReserveController);
 
