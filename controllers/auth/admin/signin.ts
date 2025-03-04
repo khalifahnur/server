@@ -30,8 +30,9 @@ const loginAdmin = async (req: Request, res: Response) => {
     // Set the token in a cookie
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite:'none',
+      secure: true,
+      sameSite: "none" ,
+      domain: ".up.railway.app",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
