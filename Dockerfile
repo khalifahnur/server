@@ -37,7 +37,7 @@ COPY . .
 RUN npm run build
 
 # Expose necessary ports
-EXPOSE 3000 3002 3000 9092 2181
+EXPOSE 3000 3002  9092 2181
 
 # Run TypeScript with ts-node
 CMD ["npx", "ts-node", "index.ts","--max-old-space-size=256"]

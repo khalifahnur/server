@@ -27,7 +27,7 @@ const io = new Server(server, {
   },
 });
 
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
 const corsOptions = {
