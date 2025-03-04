@@ -15,6 +15,7 @@ RUN npm install -g typescript
 # Copy the entire server directory
 COPY . .
 COPY firebase/swiftab.json ./dist/firebase 
+COPY services/templates ./dist/services/templates
 
 # Compile TypeScript
 RUN npm run build
