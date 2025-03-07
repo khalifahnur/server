@@ -28,12 +28,19 @@ const loginAdmin = async (req: Request, res: Response) => {
     });
 
     // Set the token in a cookie
+    // res.cookie('token', token, {
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: "none",
+    //   domain: process.env.NODE_ENV === "production" ? ".up.railway.app" : "localhost",
+    //   maxAge: 24 * 60 * 60 * 1000,
+    // });
+
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      domain: process.env.NODE_ENV === "production" ? ".up.railway.app" : "localhost",
-      maxAge: 24 * 60 * 60 * 1000,
+      secure: false, // Allow HTTP
+      sameSite: "lax", // Relax sameSite
+      // domain: Omit entirely for localhost
     });
 
     // Send email
