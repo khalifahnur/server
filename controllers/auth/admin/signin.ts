@@ -37,7 +37,7 @@ const loginAdmin = async (req: Request, res: Response) => {
     // });
 
     res.cookie('token', token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true, // Allow HTTP
       sameSite: "none", 
       // domain: Omit entirely for localhost
