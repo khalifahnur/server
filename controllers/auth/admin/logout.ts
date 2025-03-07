@@ -22,7 +22,10 @@ const LogoutAdmin = async (req: AuthenticatedRequest, res: Response) => {
 
     res.clearCookie("token", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
+      sameSite:"none",
+      domain: ".up.railway.app",
+      path:'/'
     });
 
     return res.status(200).json({ message: "Logged out successfully" });
