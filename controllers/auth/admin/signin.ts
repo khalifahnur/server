@@ -38,9 +38,9 @@ const loginAdmin = async (req: Request, res: Response) => {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: true, // Must be true for HTTPS
-      sameSite: 'none', // Required for cross-domain cookies
-      domain: '.up.railway.app', // Main domain for Railway
+      secure: true,
+      sameSite: 'none',
+      //domain: 'server-production-2ee7.up.railway.app',
       path: '/',
       maxAge: 24 * 60 * 60 * 1000,
     });

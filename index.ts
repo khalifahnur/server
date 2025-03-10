@@ -19,6 +19,19 @@ const app = express();
 
 const server = http.createServer(app);
 
+
+
+const port = process.env.PORT || 3002;
+const MongodbConn = process.env.MONGODB_CONN || "";
+
+const corsOptions = {
+  origin: ['https://swiftab-web.vercel.app', 'http://localhost:3000'],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Set-Cookie'],
+};
+
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:3000", "http://192.168.100.197:3002"],
@@ -26,19 +39,6 @@ const io = new Server(server, {
     credentials:true,
   },
 });
-
-const port = process.env.PORT || 3002;
-const MongodbConn = process.env.MONGODB_CONN || "";
-
-const corsOptions = {
-  origin: [
-    'https://swiftab-web.vercel.app', // Vercel deployment
-    'http://localhost:3000' // Local development
-  ],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
