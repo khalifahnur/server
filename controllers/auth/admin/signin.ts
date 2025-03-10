@@ -37,10 +37,12 @@ const loginAdmin = async (req: Request, res: Response) => {
     // });
 
     res.cookie('token', token, {
-      httpOnly: false,
-      secure: true, // Allow HTTP
-      sameSite: "none", 
-      // domain: Omit entirely for localhost
+      httpOnly: true,
+      secure: true, // Must be true for HTTPS
+      sameSite: 'none', // Required for cross-domain cookies
+      domain: '.up.railway.app', // Main domain for Railway
+      path: '/',
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     // Send email

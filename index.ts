@@ -31,11 +31,13 @@ const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://192.168.100.197:3002"],
-  // origin:'*',
+  origin: [
+    'https://swiftab-web.vercel.app', // Vercel deployment
+    'http://localhost:3000' // Local development
+  ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
-  
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
