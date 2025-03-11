@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
-//const sendSigninEmail = require('../../../services/email')
+const sendSigninEmail = require('../../../services/email')
 const User = require('../../../models/user');
 
 const secretKey = process.env.JWT_SECRET_KEY_USER || GenerateSecretKeyUser();
@@ -29,7 +29,7 @@ const loginUser = async (req: Request, res: Response) => {
     });
 
     // Send email
-    //await sendSigninEmail(email);
+    await sendSigninEmail(email);
 
     return res.status(200).json({
       token,
