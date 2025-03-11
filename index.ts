@@ -19,8 +19,6 @@ const app = express();
 
 const server = http.createServer(app);
 
-
-
 const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
@@ -34,7 +32,7 @@ const corsOptions = {
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://192.168.100.197:3002"],
+    origin: ["http://localhost:3000", "https://swiftab-web.vercel.app"],
     methods: ["GET", "POST"],
     credentials:true,
   },
