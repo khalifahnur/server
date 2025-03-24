@@ -11,6 +11,7 @@ interface AuthenticatedRequest extends Request {
 
 const getAdminInfo = async (req: AuthenticatedRequest, res: Response) => {
     const userId = req.user?.id;
+    console.log(userId)
 
     try {
       if (!userId) {
