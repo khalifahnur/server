@@ -1,5 +1,8 @@
 FROM node:18-alpine
 
+# Install Redis
+RUN apk add --no-cache redis
+
 # Set working directory
 WORKDIR /app/server
 
@@ -21,7 +24,7 @@ COPY services/templates ./dist/services/templates
 RUN npm run build
 
 # Expose necessary ports
-EXPOSE 3000 3002 9092 2181
+EXPOSE 3000 3002 9092 2181 6379
 
-# Run compiled JS
-CMD ["node", "dist/index.js"]
+# Start Redis in the background and then run your Node.js app
+CMD redis-server --daemonize yes && node dist/index.js
