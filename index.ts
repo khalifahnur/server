@@ -10,6 +10,7 @@ import setupWebSocket from "./sockets/socket";
 
 import "./lib/SecretKeyConfig";
 import "./lib/SecretKeyConfigUser";
+import "./lib/SecretKeyConfigWaiter";
 
 const startReservationCronJob = require("./controllers/reservation/reservationupdates");
 
