@@ -7,11 +7,24 @@ const getTotalRevenue = require("../controllers/order/dash/totalrevenue");
 const getTodayActiveReservation = require("../controllers/reservation/dash/todayreservation");
 const tableAvailability = require("../controllers/reservation/dash/tableavailability");
 const totalCustomer = require("../controllers/reservation/dash/totalcustomers");
+import Redis from "ioredis";
 
 const Admin = require("../models/admin");
 
-const secretKey = process.env.JWT_SECRET_KEY || GenerateSecretKey();
-console.log("JWT_SECRET_KEY:", secretKey ? "Loaded ✅" : "Not Found ❌"); // Debugging
+const redis = new Redis();
+const SECRET_KEY_REDIS_KEY = "jwt_secret_key";
+
+// Function to get the secret key from Redis (or generate if missing)
+const getSecretKey = async () => {
+  let secretKey = await redis.get(SECRET_KEY_REDIS_KEY);
+
+  if (!secretKey) {
+    secretKey = GenerateSecretKey();
+    await redis.set(SECRET_KEY_REDIS_KEY, secretKey);
+  }
+
+  return secretKey;
+};
 
 const setupWebSocket = (io: Server) => {
   io.on("connection", async (socket) => {
@@ -31,6 +44,7 @@ const setupWebSocket = (io: Server) => {
       console.log("Token received:", token ? `${token.substring(0, 10)}...` : "none");
 
       // ✅ Verify JWT
+      const secretKey = await getSecretKey();
       const decoded = jwt.verify(token, secretKey) as jwt.JwtPayload;
       const adminId = decoded.userId;
 
