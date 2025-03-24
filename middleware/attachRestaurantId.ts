@@ -1,11 +1,27 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import Redis from "ioredis";
 
 const Admin = require("../models/admin");
 import GenerateSecretKey from "../lib/GenerateSecretKey";
 
-const secretKey = process.env.JWT_SECRET_KEY || GenerateSecretKey();
+//const secretKey = process.env.JWT_SECRET_KEY || GenerateSecretKey();
 
+// Initialize Redis client
+const redis = new Redis();
+const SECRET_KEY_REDIS_KEY = "jwt_secret_key";
+
+// Function to get the secret key from Redis (or generate if missing)
+const getSecretKey = async () => {
+  let secretKey = await redis.get(SECRET_KEY_REDIS_KEY);
+
+  if (!secretKey) {
+    secretKey = GenerateSecretKey();
+    await redis.set(SECRET_KEY_REDIS_KEY, secretKey);
+  }
+
+  return secretKey;
+};
 const attachRestaurantId = async (
   req: Request,
   res: Response,
@@ -18,6 +34,7 @@ const attachRestaurantId = async (
   }
 
   try {
+    const secretKey = await getSecretKey();
     const decoded = jwt.verify(token, secretKey) as jwt.JwtPayload;
     const userId = decoded.userId;
 
