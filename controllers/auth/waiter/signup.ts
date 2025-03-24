@@ -2,10 +2,17 @@ import { Response, Request } from "express";
 const waiterModel = require("../../../models/waiter");
 const sendWaiterValidationCode = require("../../../services/validationcode");
 
+interface AuthenticatedRequest extends Request {
+  restaurantId?: {
+    id: string;
+  };
+}
+
 const waiterSignUp = async (req:Request, res:Response) => {
     try {
-      const { firstname,lastname, email, phoneNumber, restaurantId} = req.body;
-      console.log("Received request body:", req.body);
+      const { firstname,lastname, email, phoneNumber} = req.body;
+
+      const restaurantId = req.restaurantId;
   
       if (!firstname || !lastname || !email || !phoneNumber) {
         console.log("Missing required field:", {
@@ -36,7 +43,6 @@ const waiterSignUp = async (req:Request, res:Response) => {
         phoneNumber,
         validationcode,
         verificationCodeExpiration
-
       });
 
     await newWaiter.save();
