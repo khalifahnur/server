@@ -14,6 +14,7 @@ const Restaurant = require("../../../models/restaurant");
 const getAdminInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    console.log(userId);
     try {
         if (!userId) {
             return res.status(400).json({ error: "User not authenticated" });

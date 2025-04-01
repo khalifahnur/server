@@ -24,7 +24,10 @@ const LogoutAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const decoded = jsonwebtoken_1.default.verify(token, secretKey);
         res.clearCookie("token", {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: true,
+            sameSite: "none",
+            domain: ".up.railway.app",
+            path: '/'
         });
         return res.status(200).json({ message: "Logged out successfully" });
     }

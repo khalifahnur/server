@@ -14,25 +14,27 @@ const socket_io_1 = require("socket.io");
 const socket_1 = __importDefault(require("./sockets/socket"));
 require("./lib/SecretKeyConfig");
 require("./lib/SecretKeyConfigUser");
+require("./lib/SecretKeyConfigWaiter");
 const startReservationCronJob = require("./controllers/reservation/reservationupdates");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
+const port = process.env.PORT || 3002;
+const MongodbConn = process.env.MONGODB_CONN || "";
+const corsOptions = {
+    origin: ['https://swiftab-web.vercel.app', 'http://localhost:3000'],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Set-Cookie'],
+};
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://192.168.100.197:3002"],
+        origin: ["http://localhost:3000", "https://swiftab-web.vercel.app"],
         methods: ["GET", "POST"],
         credentials: true,
     },
 });
-const port = process.env.PORT || 3002;
-const MongodbConn = process.env.MONGODB_CONN || "";
-const corsOptions = {
-    origin: ["http://localhost:3000", "http://192.168.100.197:3002"],
-    // origin:'*',
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-};
 app.use((0, cors_1.default)(corsOptions));
 app.use((0, cookie_parser_1.default)());
 app.use(body_parser_1.default.urlencoded({ extended: true, limit: "5mb" }));

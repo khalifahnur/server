@@ -13,8 +13,8 @@ const waiterModel = require("../../../models/waiter");
 const sendWaiterValidationCode = require("../../../services/validationcode");
 const waiterSignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstname, lastname, email, phoneNumber, restaurantId } = req.body;
-        console.log("Received request body:", req.body);
+        const { firstname, lastname, email, phoneNumber } = req.body;
+        const restaurantId = req.restaurantId;
         if (!firstname || !lastname || !email || !phoneNumber) {
             console.log("Missing required field:", {
                 firstname,

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const GenerateReservationID_1 = require("../../lib/GenerateReservationID");
 const Reservation = require("../../models/reservation");
-const sendFirebaseNotification = require("../../firebase/fcmService");
+const sendExpoNotification = require("../../expo_push/sendExpoNotification");
 //const sendReservationNotification = require("../../kafka/producer/reservationProducer");
 const reservation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, restaurantId, fcmToken } = req.params;
@@ -55,29 +55,18 @@ const reservation = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             guest: savedReservation.reservationInfo.guest,
             tableNumber: savedReservation.reservationInfo.tableNumber,
             reservationId: reservationID,
-            floor: savedReservation.reservationInfo.diningArea
+            floor: savedReservation.reservationInfo.diningArea,
         };
         console.log("responseData", responseData);
         const deviceToken = fcmToken;
-        // const notificationData = {
-        //   userId,
-        //   deviceToken,
-        //   reservationId: reservationID,
-        //   date: responseData.date,
-        //   time: responseData.time,
-        //   guest: savedReservation.reservationInfo.guest,
-        //   restaurantName
-        // };
-        // await sendReservationNotification(notificationData)
-        // Expecting the device token in the request body
         if (!deviceToken) {
             console.warn("No device token provided for notification.");
         }
         else {
-            const title = "Reservation Confirmed";
-            const body = `Your reservation is confirmed for ${responseData.date} at ${responseData.time}.`;
-            // Send Firebase Notification
-            yield sendFirebaseNotification(deviceToken, title, body, {
+            const title = "✅ Reservation Confirmed!";
+            const body = `🎉 Your reservation is confirmed for ${responseData.date} at ${responseData.time}. 🍽️`;
+            // Send Notification
+            yield sendExpoNotification(deviceToken, title, body, {
                 reservationId: reservationID,
                 guest: String(savedReservation.reservationInfo.guest),
             });

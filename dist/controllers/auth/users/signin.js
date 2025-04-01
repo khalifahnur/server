@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const GenerateSecretKeyUser_1 = __importDefault(require("../../../lib/GenerateSecretKeyUser"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-//const sendSigninEmail = require('../../../services/email')
+const sendSigninEmail = require('../../../services/email');
 const User = require('../../../models/user');
 const secretKey = process.env.JWT_SECRET_KEY_USER || (0, GenerateSecretKeyUser_1.default)();
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -33,7 +33,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             expiresIn: "24h",
         });
         // Send email
-        //await sendSigninEmail(email);
+        yield sendSigninEmail(email);
         return res.status(200).json({
             token,
             user: {
