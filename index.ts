@@ -7,10 +7,13 @@ import cookieParser from "cookie-parser";
 import http from "http";
 import { Server } from "socket.io";
 import setupWebSocket from "./sockets/socket";
+import session from "express-session"
+import passport from "./controllers/auth/passport/passport"
 
 import "./lib/SecretKeyConfig";
 import "./lib/SecretKeyConfigUser";
 import "./lib/SecretKeyConfigWaiter";
+
 
 const startReservationCronJob = require("./controllers/reservation/reservationupdates");
 
@@ -38,6 +41,18 @@ const io = new Server(server, {
     credentials:true,
   },
 });
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === "production" },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(cors(corsOptions));
 app.use(cookieParser());

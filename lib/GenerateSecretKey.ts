@@ -1,9 +1,7 @@
-const { webcrypto } = require('crypto');
+import { randomBytes } from "crypto";
 
-const GenerateSecretKey: () => string = () => {
-    const array = new Uint8Array(32);
-    webcrypto.getRandomValues(array);
-    return Buffer.from(array).toString("hex");
-};  
+const generateSecretKey = (): string => {
+  return randomBytes(32).toString("hex");
+};
 
-export default GenerateSecretKey;
+export default generateSecretKey;
