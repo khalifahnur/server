@@ -91,7 +91,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: process.env.GOOGLE_CALLBACK || "http://localhost:3002/swiftab/auth/admin/google-auth/callback",
+      callbackURL: process.env.GOOGLE_CALLBACK || "http://server-production-2ee7.up.railway.app/swiftab/auth/admin/google-auth/callback",
     },
     async (_accessToken, _refreshToken, profile: GoogleProfile, done) => {
       try {
@@ -125,7 +125,7 @@ passport.use(
     {
       consumerKey: process.env.X_CLIENT_ID!, // Use consumerKey for OAuth 1.0A
       consumerSecret: process.env.X_CLIENT_SECRET!,
-      callbackURL: process.env.X_CALLBACK || "http://127.0.0.1:3002/swiftab/auth/admin/x-auth/callback",
+      callbackURL: process.env.X_CALLBACK || "https://server-production-2ee7.up.railway.app/swiftab/auth/admin/x-auth",
       includeEmail: true, // Enables email if app configured
     },
     async (_accessToken, _tokenSecret, profile: any, done) => {
