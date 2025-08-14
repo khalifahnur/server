@@ -1,4 +1,4 @@
-import GenerateSecretKeyWaiter from '../../../lib/GenerateSecretKeyWaiter';
+import getSecretKey from "../../../lib/getSecretKey";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
@@ -6,7 +6,6 @@ import { Request, Response } from 'express';
 const sendSigninEmail = require('../../../services/waitersignin')
 const Waiter = require('../../../models/waiter');
 
-const secretKey = process.env.JWT_SECRET_KEY_WAITER || GenerateSecretKeyWaiter();
 
 const loginWaiter = async (req: Request, res: Response) => {
   try {
@@ -24,10 +23,10 @@ const loginWaiter = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Incorrect Email/Password" });
     }
 
-    const token = jwt.sign({ waiterId: waiter._id }, secretKey, {
+    const secretKey = await getSecretKey(waiter._id.toString());
+    const token = jwt.sign({ userId: waiter._id }, secretKey, {
       expiresIn: "24h",
     });
-
     // Send email
     await sendSigninEmail(email);
 

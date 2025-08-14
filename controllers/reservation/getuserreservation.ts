@@ -34,7 +34,6 @@ export const getAllUserReservation = async (
   res: Response
 ) => {
   const restaurantId = req.restaurantId;
-  console.log(restaurantId)
 
   try {
     const reservations = await Reservation.find(
@@ -109,5 +108,3 @@ export const getUserCancelledReservation = async (
       .json({ error: "An error occurred while retrieving the reservation" });
   }
 };
-
-//module.exports = {getAllUserReservation,getUserActiveReservation,getUserCancelledReservation};

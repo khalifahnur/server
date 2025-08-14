@@ -8,7 +8,7 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-const waiterSignUp = async (req:Request, res:Response) => {
+const waiterSignUp = async (req:AuthenticatedRequest, res:Response) => {
     try {
       const { firstname,lastname, email, phoneNumber} = req.body;
 

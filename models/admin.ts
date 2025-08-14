@@ -2,23 +2,22 @@ import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
 const adminSchema = new Schema({
-  provider: String,            // 'google' or 'x'
-  providerId: String,          // provider-specific id
+  provider: {type:String}, 
+  providerId: {type:String},
   email: { type: String, index: true, sparse: true },
-  name: String,
+  name: {type:String},
   firstName:String,
   lastName:String,
   avatar: String,
-  createdAt: { type: Date, default: Date.now },
-  // name: { type: String, required: true },
-  // email: { type: String, required: true, unique: true },
+  // createdAt: { type: Date, default: Date.now },
   password: { type: String },
   phoneNumber:{type:String},
-  // createdAt: { type: Date, default: Date.now },
-  restaurantId: { type: String, default: null },
+  restaurantId: { type: Schema.Types.ObjectId, ref: 'Restaurant',default: null },
   verificationCode: { type: String },
   verificationCodeExpiration: { type: Date },
 },{timestamps:true});
+
+adminSchema.index({email:1,restaurantId:1,_id:1})
 
 const Admin = model("Admin", adminSchema);
 module.exports = Admin;

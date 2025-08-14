@@ -34,7 +34,6 @@ interface Reservation {
 
 const getResActiveReservation = async (req: Request, res: Response) => {
   const { userId } = req.params;
-  console.log(userId)
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required" });

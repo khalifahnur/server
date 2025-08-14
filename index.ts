@@ -7,12 +7,12 @@ import cookieParser from "cookie-parser";
 import http from "http";
 import { Server } from "socket.io";
 import setupWebSocket from "./sockets/socket";
-import session from "express-session"
-import passport from "./controllers/auth/passport/passport"
+import session from "express-session";
+import passport from "./controllers/auth/passport/passport";
 
-import "./lib/SecretKeyConfig";
-import "./lib/SecretKeyConfigUser";
-import "./lib/SecretKeyConfigWaiter";
+// import "./lib/SecretKeyConfig";
+// import "./lib/SecretKeyConfigUser";
+// import "./lib/SecretKeyConfigWaiter";
 
 
 const startReservationCronJob = require("./controllers/reservation/reservationupdates");
@@ -26,13 +26,26 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
-const corsOptions = {
-  origin: ['https://swiftab-web.vercel.app', 'http://localhost:3000'],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['Set-Cookie'],
-};
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://127.0.0.1:3000",
+        "https://swiftab-web.vercel.app",
+        "https://78578e1782a0.ngrok-free.app"
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin || true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS","PUT"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
 
 const io = new Server(server, {
   cors: {
@@ -44,21 +57,26 @@ const io = new Server(server, {
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "your-secret-key",
+    secret: process.env.SESSION_SECRET || "",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === "production" },
+    cookie: { 
+      secure: process.env.NODE_ENV === "production",
+      //httpOnly: false,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+     },
   })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "5mb" }));
 app.use(bodyParser.json({ limit: "5mb" }));
+//app.set('trust proxy', true);
 
 mongoose
   .connect(MongodbConn)

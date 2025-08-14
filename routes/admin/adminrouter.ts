@@ -9,7 +9,7 @@ const AdminSignin = require('../../controllers/auth/admin/signin');
 const FetchInfo = require("../../controllers/auth/admin/fetchinfo");
 const authenticateUser = require("../../middleware/middleware");
 const LogoutAdmin = require("../../controllers/auth/admin/logout");
-const { oauthSignin } = require("../../controllers/auth/admin/oauth");
+const oauthSignin = require("../../controllers/auth/admin/oauth");
 
 
 // const AuthController = require("../controllers/AuthController");

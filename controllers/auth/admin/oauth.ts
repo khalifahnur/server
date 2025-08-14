@@ -12,7 +12,7 @@ interface IUser extends Document {
   avatar?: string;
   password?: string;
   phoneNumber?: string;
-  _id:string
+  _id: string;
 }
 
 const oauthSignin = (providerName: string) => {
@@ -20,9 +20,7 @@ const oauthSignin = (providerName: string) => {
     try {
       const user = req.user as IUser;
 
-      const email = user.email;
-
-      if (!email) {
+      if (!user.email) {
         return res.redirect(
           "http://localhost:3000/login?error=email_not_available"
         );
@@ -33,20 +31,21 @@ const oauthSignin = (providerName: string) => {
         expiresIn: "24h",
       });
 
-      const frontendURL =
-        process.env.NODE_ENV === "production"
-          ? "https://swiftab-web.vercel.app/home"
-          : "http://localhost:3000/home";
+      const isProduction = process.env.NODE_ENV === "production";
+      const frontendURL = isProduction
+        ? "https://swiftab-web.vercel.app/dash"
+        : "http://127.0.0.1:3000/dash";
 
-      res
-        .cookie("user_auth", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-          path: "/",
-          maxAge: 24 * 60 * 60 * 1000,
-        })
-        .redirect(frontendURL);
+      res.cookie("token", token ,{
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        path: "/",
+        maxAge: 24 * 60 * 60 * 1000,
+      } 
+    );
+
+      res.redirect(frontendURL);
     } catch (err) {
       console.error(`${providerName} auth error:`, err);
       res.redirect("http://localhost:3000/login?error=auth_failed");
@@ -54,4 +53,4 @@ const oauthSignin = (providerName: string) => {
   };
 };
 
-export default oauthSignin;
+module.exports = oauthSignin;
