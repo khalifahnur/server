@@ -9,6 +9,7 @@ import { Server } from "socket.io";
 import setupWebSocket from "./sockets/socket";
 import session from "express-session";
 import passport from "./controllers/auth/passport/passport";
+import MongoStore from "connect-mongo";
 
 // import "./lib/SecretKeyConfig";
 // import "./lib/SecretKeyConfigUser";
@@ -60,6 +61,11 @@ app.use(
     secret: process.env.SESSION_SECRET || "",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: MongodbConn,
+      collectionName: "oauthSessions",
+      ttl: 24 * 60 * 60,
+    }),
     cookie: { 
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
