@@ -27,6 +27,8 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
+app.set('trust proxy', true);
+
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -82,7 +84,7 @@ app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "5mb" }));
 app.use(bodyParser.json({ limit: "5mb" }));
-//app.set('trust proxy', true);
+
 
 mongoose
   .connect(MongodbConn)
