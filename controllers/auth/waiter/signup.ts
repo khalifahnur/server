@@ -12,7 +12,7 @@ const waiterSignUp = async (req:AuthenticatedRequest, res:Response) => {
     try {
       const { firstname,lastname, email, phoneNumber} = req.body;
 
-      const restaurantId = req.restaurantId;
+      const restaurantId = req.restaurantId?.id;
   
       if (!firstname || !lastname || !email || !phoneNumber) {
         console.log("Missing required field:", {
