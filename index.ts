@@ -173,7 +173,7 @@ app.use("/swiftab/payment", paymentrouter);
 app.use("/swiftab/orders", orderrouter);
 
 setupWebSocket(io);
-//app.disable('x-powered-by');
+app.disable('x-powered-by');
 server
   .listen(port, () => {
     console.log(`Listening on port ${port}`);
