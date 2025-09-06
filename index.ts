@@ -28,7 +28,6 @@ const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
 app.set('trust proxy', true);
-app.disable('x-powered-by');
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -174,7 +173,7 @@ app.use("/swiftab/payment", paymentrouter);
 app.use("/swiftab/orders", orderrouter);
 
 setupWebSocket(io);
-// Event listener for connection
+app.disable('x-powered-by');
 server
   .listen(port, () => {
     console.log(`Listening on port ${port}`);
