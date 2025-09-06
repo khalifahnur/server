@@ -7,6 +7,8 @@ const router = express.Router();
 const AdminSignup = require('../../controllers/auth/admin/signup');
 const AdminSignin = require('../../controllers/auth/admin/signin');
 const FetchInfo = require("../../controllers/auth/admin/fetchinfo");
+const FetchWaiter = require("../../controllers/auth/admin/fetchWaiter");
+const DeleteWaiter = require("../../controllers/auth/admin/delete");
 const authenticateUser = require("../../middleware/middleware");
 const LogoutAdmin = require("../../controllers/auth/admin/logout");
 const oauthSignin = require("../../controllers/auth/admin/oauth");
@@ -24,6 +26,8 @@ router.post("/SignIn", AdminSignin);
 // router.post("/verify-code",verifyCodeController.verifyCode);
 // router.post("/reset-password",resetPasswordController.resetPassword);
 router.get("/fetchinfo", authenticateUser,FetchInfo);
+router.get("/fetch-waiter",authenticateUser,FetchWaiter);
+router.delete("/waiter/:id",authenticateUser,DeleteWaiter)
 router.post("/logout",authenticateUser,LogoutAdmin);
 
 router.get("/google-auth", passport.authenticate("google", { scope: ["profile", "email"] }));
