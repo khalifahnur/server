@@ -13,7 +13,6 @@ exports.getUserCancelledReservation = exports.getUserActiveReservation = exports
 const Reservation = require("../../models/reservation");
 const getAllUserReservation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const restaurantId = req.restaurantId;
-    console.log(restaurantId);
     try {
         const reservations = yield Reservation.find({ "restaurantInfo.restaurantId": restaurantId }, { reservationInfo: 1, status: 1, _id: 0 } // Select only reservationInfo and status
         );
@@ -75,4 +74,3 @@ const getUserCancelledReservation = (req, res) => __awaiter(void 0, void 0, void
     }
 });
 exports.getUserCancelledReservation = getUserCancelledReservation;
-//module.exports = {getAllUserReservation,getUserActiveReservation,getUserCancelledReservation};

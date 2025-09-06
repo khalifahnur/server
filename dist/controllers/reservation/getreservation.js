@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Reservation = require("../../models/reservation");
 const getResActiveReservation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
-    console.log(userId);
     if (!userId) {
         return res.status(400).json({ error: "User ID is required" });
     }

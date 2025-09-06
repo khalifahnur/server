@@ -13,7 +13,7 @@
     "paths": {
       "*": ["node_modules/*"]
     },
-    "typeRoots": ["./types","./node_modules/@types"]
+    //"typeRoots": ["./types","./node_modules/@types"]
   },
   "include": ["controllers/**/**/*.ts","controllers/**/*.ts","**/*.ts","middleware/*.ts"],
   "exclude": ["dist"]

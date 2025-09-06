@@ -13,24 +13,25 @@ const transporter = nodemailer_1.default.createTransport({
         pass: process.env.GMAIL_PASS,
     },
 });
+const templatePath = path_1.default.join(__dirname, "templates", "validation.html");
+const htmlTemplate = fs_1.default.readFileSync(templatePath, "utf8");
 const sendWaiterValidationCode = (recipientEmail, verificationCode) => {
-    // APPEND HTML FILE
-    const htmlTemplate = fs_1.default.readFileSync(path_1.default.join(__dirname, "templates", "validation.html"), "utf8");
-    const replaceVerificationCode = htmlTemplate.replace("{{verification_code}}", verificationCode);
-    const mailOptions = {
-        from: '"Swiftab Team" <no-reply@swiftab.com>',
-        to: recipientEmail,
-        subject: "Password Reset Verification",
-        html: replaceVerificationCode,
-    };
-    // Send email
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error("Error sending email:", error);
-        }
-        else {
+    return new Promise((resolve, reject) => {
+        const replaceVerificationCode = htmlTemplate.replace("{{verification_code}}", verificationCode);
+        const mailOptions = {
+            from: `"Swiftab Team" <${process.env.GMAIL_USER}>`,
+            to: recipientEmail,
+            subject: "Your Waiter Signup Verification Code",
+            html: replaceVerificationCode,
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Error sending email:", error);
+                return reject(error);
+            }
             console.log("Email sent: %s", info.messageId);
-        }
+            resolve();
+        });
     });
 };
 module.exports = sendWaiterValidationCode;

@@ -12,12 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const GenerateSecretKeyWaiter_1 = __importDefault(require("../../../lib/GenerateSecretKeyWaiter"));
+const getSecretKey_1 = __importDefault(require("../../../lib/getSecretKey"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const sendSigninEmail = require('../../../services/waitersignin');
 const Waiter = require('../../../models/waiter');
-const secretKey = process.env.JWT_SECRET_KEY_WAITER || (0, GenerateSecretKeyWaiter_1.default)();
 const loginWaiter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
@@ -29,7 +28,8 @@ const loginWaiter = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (!isPasswordMatch) {
             return res.status(401).json({ message: "Incorrect Email/Password" });
         }
-        const token = jsonwebtoken_1.default.sign({ waiterId: waiter._id }, secretKey, {
+        const secretKey = yield (0, getSecretKey_1.default)(waiter._id.toString());
+        const token = jsonwebtoken_1.default.sign({ userId: waiter._id }, secretKey, {
             expiresIn: "24h",
         });
         // Send email

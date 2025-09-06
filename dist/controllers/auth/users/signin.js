@@ -12,12 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const GenerateSecretKeyUser_1 = __importDefault(require("../../../lib/GenerateSecretKeyUser"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const sendSigninEmail = require('../../../services/email');
-const User = require('../../../models/user');
-const secretKey = process.env.JWT_SECRET_KEY_USER || (0, GenerateSecretKeyUser_1.default)();
+const getSecretKey_1 = __importDefault(require("../../../lib/getSecretKey"));
+const sendSigninEmail = require("../../../services/email");
+const User = require("../../../models/user");
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
@@ -29,6 +28,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!isPasswordMatch) {
             return res.status(401).json({ message: "Incorrect Email/Password" });
         }
+        const secretKey = yield (0, getSecretKey_1.default)(user._id.toString());
         const token = jsonwebtoken_1.default.sign({ userId: user._id }, secretKey, {
             expiresIn: "24h",
         });
