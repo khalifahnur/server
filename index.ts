@@ -28,7 +28,7 @@ const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
 app.set('trust proxy', true);
-
+app.disable('x-powered-by');
 app.use(
   cors({
     origin: (origin, callback) => {
