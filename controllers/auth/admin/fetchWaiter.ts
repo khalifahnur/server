@@ -22,7 +22,7 @@ const fetchWaiter = async (req: AuthenticatedRequest, res: Response) => {
       return res.status(404).json({ error: "Admin info not found" });
     }
 
-    const waiter = Waiter.find({restaurantId: adminInfo.restaurantId}).lean();
+    const waiter = await Waiter.find({restaurantId: adminInfo.restaurantId}).lean();
 
     res.status(200).json({ message: "fetched waiter", waiter });
   } catch (error) {
