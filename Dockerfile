@@ -16,8 +16,8 @@ RUN npm install
 RUN npm install -g typescript
 
 # Copy the entire server directory
-COPY . . 
-COPY src/services/templates ./dist/src/services/templates
+COPY . .  
+COPY src/services/templates ./dist/services/templates
 
 # Compile TypeScript
 RUN npm run build
