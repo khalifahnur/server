@@ -30,5 +30,5 @@ const attachRestaurantId = async (req, res, next) => {
         res.status(401).json({ message: "Invalid or expired token" });
     }
 };
-exports.module = attachRestaurantId;
+module.exports = attachRestaurantId;
 //# sourceMappingURL=attachRestaurantId.js.map

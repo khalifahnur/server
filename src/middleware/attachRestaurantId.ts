@@ -40,4 +40,4 @@ const attachRestaurantId = async (
   }
 };
 
-exports.module =  attachRestaurantId; 
+module.exports =  attachRestaurantId; 
