@@ -7,12 +7,11 @@ const completeOrder = async (req: Request, res: Response) => {
     const { orderId } = req.params;
     const { status, paymentMethod } = req.body;
 
-    console.log(orderId,status,paymentMethod)
-
     const updatedOrder = await Order.findByIdAndUpdate(
-      {_id:orderId},
-      { orderStatus: status },
-      { paymentMethod},
+      orderId,
+      { orderStatus: status,
+        paymentMethod:paymentMethod 
+      },
       { new: true }
     );
 
