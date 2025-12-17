@@ -1,22 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2020",
     "module": "commonjs",
-    "outDir": "./dist",  // output files to 'dist'
-    "rootDir": ".",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "baseUrl": "./",
-    "paths": {
-      "*": ["node_modules/*"]
-    },
-    //"typeRoots": ["./types","./node_modules/@types"]
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
   },
-  "include": ["controllers/**/**/*.ts","controllers/**/*.ts","**/*.ts","middleware/*.ts"],
-  "exclude": ["dist"]
-
-
+ "include": ["src/**/*"],
+  "exclude": ["dist","node_modules"]
 }
