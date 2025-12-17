@@ -1,10 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-const Admin = require("../models/admin");
 import getSecretKey from "../lib/getSecretKey";
+const Admin = require("../models/admin");
+
+interface AuthenticatedRequest extends Request {
+  restaurantId?: string; 
+}
 
 const attachRestaurantId = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -24,7 +28,6 @@ const attachRestaurantId = async (
     const verified = jwt.verify(token, secretKey) as jwt.JwtPayload;
     const userId = verified.userId;
 
-    // Find the admin by userId and get the restaurantId
     const admin = await Admin.findById(userId);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
@@ -37,4 +40,4 @@ const attachRestaurantId = async (
   }
 };
 
-module.exports = attachRestaurantId;
+exports.module =  attachRestaurantId; 

@@ -1,0 +1,33 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const upload_1 = __importDefault(require("../../middleware/upload"));
+const express = require("express");
+const router = express.Router();
+const AddContoller = require("../../controllers/restaurant/addrestaurant");
+const AddMenuController = require("../../controllers/restaurant/addmenu");
+const RemoveController = require("../../controllers/restaurant/removemenu");
+const authenticateUser = require("../../middleware/middleware");
+const attachRestaurantId = require("../../middleware/attachRestaurantId");
+const UpdateController = require("../../controllers/restaurant/editmenu");
+const getMenu = require("../../controllers/restaurant/getmenurestaurant");
+const getMenuByRestaurantId = require("../../controllers/restaurant/FetchMenu");
+const FetchAllRestaurants = require("../../controllers/restaurant/fetchrestaurants");
+const FetchResNearMe = require("../../controllers/restaurant/fetchresnearme");
+const PostRecentlyViewed = require("../../controllers/view-recently/view");
+const FetchRecentlyView = require("../../controllers/view-recently/fetchView");
+router.post("/addrestaurant", authenticateUser, upload_1.default.single("image"), AddContoller);
+router.post("/addmenu/:menuType", attachRestaurantId, upload_1.default.single("image"), AddMenuController);
+router.delete("/deletemenu/:menuType/:itemId", attachRestaurantId, RemoveController);
+router.put("/updatemenu/:menuType/:itemId", attachRestaurantId, UpdateController);
+router.get("/menu", attachRestaurantId, getMenu);
+router.get("/fetch-all-restaurants", FetchAllRestaurants);
+router.post("/fetch-restaurants-near-me", FetchResNearMe);
+//fetch-recently
+router.post("/recently-viewed-restaurants", PostRecentlyViewed);
+router.get("/fetch-recently-viewed-restaurants/:userId", FetchRecentlyView);
+router.get('/menu/:restaurantId', getMenuByRestaurantId);
+module.exports = router;
+//# sourceMappingURL=resrouter.js.map
