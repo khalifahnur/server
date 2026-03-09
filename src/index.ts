@@ -38,7 +38,7 @@ const MongodbConn = process.env.MONGODB_CONN || "";
 const corsOptions = {
   origin: [
     //"http://localhost:3000",
-    "https://swiftab.co.ke/"
+    "https://www.swiftab.co.ke/"
 
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -49,7 +49,7 @@ const corsOptions = {
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://swiftab.co.ke/"],
+    origin: ["https://www.swiftab.co.ke/"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -74,7 +74,7 @@ mongoose
   });
 
 const redisClient = createClient({
-  //url: process.env.REDIS_URL ,
+  url: process.env.REDIS_URL ,
   // url: "redis://localhost:6379",
 });
 
