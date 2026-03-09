@@ -1,15 +1,3 @@
-import { Expo } from "expo-server-sdk";
-
-const expo = new Expo();
-
-/**
- * Sends an Expo Push Notification.
- *
- * @param deviceToken - The target device token.
- * @param title - Notification title.
- * @param body - Notification body.
- * @param data - Additional data to include in the notification.
- */
 const sendExpoNotification = async (
   deviceToken: string,
   title: string,
@@ -17,28 +5,29 @@ const sendExpoNotification = async (
   data: Record<string, string>
 ): Promise<void> => {
   try {
-    console.log("Sending notification to deviceToken:", deviceToken);
+    // 1. Dynamic Import: This works in both CommonJS and ESM
+    const { Expo } = await import("expo-server-sdk");
+    const expo = new Expo();
 
     if (!Expo.isExpoPushToken(deviceToken)) {
-      throw new Error("Invalid Expo Push Token");
+      console.error(`Push token ${deviceToken} is not a valid Expo push token`);
+      return;
     }
 
-    const message = {
+    const messages = [{
       to: deviceToken,
-      sound: "default",
+      sound: "default" as const,
       title,
       body,
       data,
-    };
+    }];
 
-    console.log("Notification payload:", message);
+    const tickets = await expo.sendPushNotificationsAsync(messages);
+    console.log("Notification ticket:", tickets);
 
-    const ticket = await expo.sendPushNotificationsAsync([message]);
-    console.log("Notification sent successfully:", ticket);
   } catch (error: any) {
     console.error("Error sending notification:", error.message);
-    console.error("Detailed error:", error);
   }
 };
 
-module.exports = sendExpoNotification;
+export default sendExpoNotification;
