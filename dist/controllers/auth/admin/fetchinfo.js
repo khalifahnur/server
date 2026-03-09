@@ -3,13 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Admin = require("../../../models/admin");
 const Restaurant = require("../../../models/restaurant");
 const getAdminInfo = async (req, res) => {
-    const userId = req.user?.id;
-    console.log(userId);
+    const admin = req.adminId?.id;
     try {
-        if (!userId) {
-            return res.status(400).json({ error: "User not authenticated" });
+        if (!admin) {
+            return res.status(400).json({ error: "Admin not authenticated" });
         }
-        const adminInfo = await Admin.findById(userId);
+        const adminInfo = await Admin.findById(admin);
         if (!adminInfo) {
             return res.status(404).json({ error: "Admin info not found" });
         }
@@ -18,7 +17,6 @@ const getAdminInfo = async (req, res) => {
         if (adminInfo.restaurantId) {
             const restaurantInfo = await Restaurant.findById(adminInfo.restaurantId);
             if (restaurantInfo) {
-                // If your Restaurant model has `data[0]`
                 restaurantData = Array.isArray(restaurantInfo.data)
                     ? restaurantInfo.data[0] || {}
                     : restaurantInfo;
@@ -29,8 +27,6 @@ const getAdminInfo = async (req, res) => {
         }
         const responseData = {
             name: adminInfo.name,
-            firstName: adminInfo.firstName,
-            lastName: adminInfo.lastName,
             createdAt: adminInfo.createdAt,
             email: adminInfo.email || null,
             phoneNumber: adminInfo.phoneNumber || null,
@@ -47,7 +43,7 @@ const getAdminInfo = async (req, res) => {
         res.status(200).json(responseData);
     }
     catch (error) {
-        console.error("Error fetching admin info:", error);
+        // console.error("Error fetching admin info:", error);
         res.status(500).json({ error: "Server error" });
     }
 };

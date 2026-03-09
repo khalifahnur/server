@@ -9,7 +9,6 @@ const router = express.Router();
 const AddContoller = require("../../controllers/restaurant/addrestaurant");
 const AddMenuController = require("../../controllers/restaurant/addmenu");
 const RemoveController = require("../../controllers/restaurant/removemenu");
-const authenticateUser = require("../../middleware/middleware");
 const attachRestaurantId = require("../../middleware/attachRestaurantId");
 const UpdateController = require("../../controllers/restaurant/editmenu");
 const getMenu = require("../../controllers/restaurant/getmenurestaurant");
@@ -18,7 +17,8 @@ const FetchAllRestaurants = require("../../controllers/restaurant/fetchrestauran
 const FetchResNearMe = require("../../controllers/restaurant/fetchresnearme");
 const PostRecentlyViewed = require("../../controllers/view-recently/view");
 const FetchRecentlyView = require("../../controllers/view-recently/fetchView");
-router.post("/addrestaurant", authenticateUser, upload_1.default.single("image"), AddContoller);
+const authenticateAdmin = require("../../middleware/adminMiddleware");
+router.post("/addrestaurant", authenticateAdmin, upload_1.default.single("image"), AddContoller);
 router.post("/addmenu/:menuType", attachRestaurantId, upload_1.default.single("image"), AddMenuController);
 router.delete("/deletemenu/:menuType/:itemId", attachRestaurantId, RemoveController);
 router.put("/updatemenu/:menuType/:itemId", attachRestaurantId, UpdateController);

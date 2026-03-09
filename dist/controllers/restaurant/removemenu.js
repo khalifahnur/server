@@ -10,13 +10,13 @@ const deleteMenuItem = async (req, res) => {
     const restaurantId = req.restaurantId;
     try {
         const validMenuTypes = ["breakfast", "lunch", "dinner"];
-        if (!validMenuTypes.includes(menuType)) {
+        if (!validMenuTypes.includes(menuType.toString())) {
             return res.status(400).json({ message: "Invalid menu type" });
         }
         const updatePath = `data.0.menu.${menuType}`;
         const updatedRestaurant = await Restaurant.findOneAndUpdate({ _id: restaurantId }, {
             $pull: {
-                [updatePath]: { _id: new mongoose_1.default.Types.ObjectId(itemId) },
+                [updatePath]: { _id: new mongoose_1.default.Types.ObjectId(itemId.toString()) },
             },
         }, { new: true });
         if (!updatedRestaurant) {
@@ -25,7 +25,7 @@ const deleteMenuItem = async (req, res) => {
         return res.status(200).json({ message: "Menu item deleted successfully" });
     }
     catch (error) {
-        console.error("Error deleting menu item:", error);
+        // console.error("Error deleting menu item:", error);
         return res.status(500).json({ message: "Error deleting menu item", error });
     }
 };

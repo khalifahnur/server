@@ -62,7 +62,7 @@ const createReservation = async (req: Request, res: Response) => {
     }
 
     const reservationID = GenerateReservationID({
-      restaurantId,
+      restaurantId: restaurantId.toString(),
       bookingFor: data.reservationInfo.bookingFor,
       endTime: data.reservationInfo.endTime,
     });

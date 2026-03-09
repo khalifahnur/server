@@ -1,38 +1,22 @@
 import { Request, Response } from "express";
 const Restaurant = require("../../models/restaurant");
-const AdminAuth = require("../../models/admin");
+const Admin = require("../../models/admin");
 
 import { uploadImageToCloudinary } from "../../lib/UploadImage";
 
-// Define an interface for the expected request body
-interface InitialRestaurantData {
-  title: string;
-  data: {
-    image: string;
-    restaurantName: string;
-    location: string;
-    latitude: number;
-    longitude: number;
-    rate: number;
-    about: {
-      description: string;
-      averagePrice: number;
-      hrsOfOperation: string;
-      phone: string;
-      email: string;
-    };
-  }[];
-}
-
-// Define an extended request type with `user`
 interface AuthenticatedRequest extends Request {
-  user?: {
+  adminId?: {
     id: string;
   };
 }
 
 const addRestaurantData = async (req: AuthenticatedRequest, res: Response) => {
+  const admin = req.adminId?.id;
+
   try {
+    if (!admin) {
+      return res.status(400).json({ error: "Admin not authenticated" });
+    }
 
     if (!req.body.data) {
       return res.status(400).json({ message: "Data is invalid or empty" });
@@ -53,17 +37,15 @@ const addRestaurantData = async (req: AuthenticatedRequest, res: Response) => {
     if (!req.file) {
       return res.status(400).json({ message: "Image file is required" });
     }
-    
+
     const uploadedImageUrl = await uploadImageToCloudinary(req.file);
     data[0].image = uploadedImageUrl;
 
     const newRestaurant = new Restaurant({ title, data });
     const savedRestaurant = await newRestaurant.save();
 
-    const userId = req.user?.id;
-
-    if (userId) {
-      await AdminAuth.findByIdAndUpdate(userId, {
+    if (admin) {
+      await Admin.findByIdAndUpdate(admin, {
         restaurantId: savedRestaurant._id,
       });
     }
@@ -73,10 +55,9 @@ const addRestaurantData = async (req: AuthenticatedRequest, res: Response) => {
       restaurant: savedRestaurant,
     });
   } catch (error) {
-    console.error("Error adding restaurant data:", error);
+    console.log("Error adding restaurant info",error)
     res.status(500).json({ message: "Error adding restaurant data", error });
   }
 };
-
 
 module.exports = addRestaurantData;

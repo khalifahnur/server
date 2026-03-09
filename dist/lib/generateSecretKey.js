@@ -5,4 +5,4 @@ const generateSecretKey = () => {
     return (0, crypto_1.randomBytes)(32).toString("hex");
 };
 exports.default = generateSecretKey;
-//# sourceMappingURL=GenerateSecretKey.js.map
+//# sourceMappingURL=generateSecretKey.js.map

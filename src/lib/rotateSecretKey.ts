@@ -1,5 +1,5 @@
 import Redis from "ioredis";
-import generateSecretKey from "./GenerateSecretKey";
+import generateSecretKey from "./generateSecretKey";
 
 const redis = new Redis();
 

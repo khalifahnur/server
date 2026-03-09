@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
-import GenerateSecretKey from '../lib/GenerateSecretKey';
+import GenerateSecretKey from '../lib/generateSecretKey';
 
 const getTotalRevenue = require("../controllers/order/dash/totalrevenue");
 const getTodayActiveReservation = require("../controllers/reservation/dash/todayreservation");
@@ -46,7 +46,7 @@ const setupWebSocket = (io: Server) => {
       // ✅ Verify JWT
       const secretKey = await getSecretKey();
       const decoded = jwt.verify(token, secretKey) as jwt.JwtPayload;
-      const adminId = decoded.userId;
+      const adminId = decoded.adminId;
 
       console.log("Decoded token:", decoded);
       // Find the admin by userId and get the restaurantId

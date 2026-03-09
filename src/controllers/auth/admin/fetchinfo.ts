@@ -1,27 +1,26 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
 const Admin = require("../../../models/admin");
 const Restaurant = require("../../../models/restaurant");
 
 interface AuthenticatedRequest extends Request {
-  user?: {
+  adminId?: {
     id: string;
   };
 }
 
 const getAdminInfo = async (req: AuthenticatedRequest, res: Response) => {
-    const userId = req.user?.id;
-    console.log(userId)
+  const admin = req.adminId?.id;
 
-    try {
-      if (!userId) {
-        return res.status(400).json({ error: "User not authenticated" });
-      }
-  
-      const adminInfo = await Admin.findById(userId);
-      if (!adminInfo) {
-        return res.status(404).json({ error: "Admin info not found" });
-      }
+  try {
+    if (!admin) {
+      return res.status(400).json({ error: "Admin not authenticated" });
+    }
+
+    const adminInfo = await Admin.findById(admin);
+    if (!adminInfo) {
+      return res.status(404).json({ error: "Admin info not found" });
+    }
 
     let restaurantData: any = {};
     let aboutInfo: any = {};
@@ -30,7 +29,6 @@ const getAdminInfo = async (req: AuthenticatedRequest, res: Response) => {
       const restaurantInfo = await Restaurant.findById(adminInfo.restaurantId);
 
       if (restaurantInfo) {
-        // If your Restaurant model has `data[0]`
         restaurantData = Array.isArray((restaurantInfo as any).data)
           ? (restaurantInfo as any).data[0] || {}
           : restaurantInfo;
@@ -43,14 +41,12 @@ const getAdminInfo = async (req: AuthenticatedRequest, res: Response) => {
 
     const responseData = {
       name: adminInfo.name,
-      firstName: adminInfo.firstName,
-      lastName: adminInfo.lastName,
       createdAt: adminInfo.createdAt,
       email: adminInfo.email || null,
       phoneNumber: adminInfo.phoneNumber || null,
-      avatar:adminInfo.avatar || null,
+      avatar: adminInfo.avatar || null,
       restaurantName: restaurantData.restaurantName || null,
-      restaurantId:restaurantData._id || null,
+      restaurantId: restaurantData._id || null,
       location: restaurantData.location || null,
       image: restaurantData.image || null,
       hrsOfOperation: aboutInfo.hrsOfOperation || null,
@@ -60,10 +56,10 @@ const getAdminInfo = async (req: AuthenticatedRequest, res: Response) => {
     };
 
     res.status(200).json(responseData);
-    } catch (error) {
-      console.error("Error fetching admin info:", error);
-      res.status(500).json({ error: "Server error" });
-    }
+  } catch (error) {
+    // console.error("Error fetching admin info:", error);
+    res.status(500).json({ error: "Server error" });
+  }
 };
 
 module.exports = getAdminInfo;

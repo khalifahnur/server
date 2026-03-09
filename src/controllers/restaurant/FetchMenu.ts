@@ -6,7 +6,7 @@ const Restaurant = require("../../models/restaurant");
 const getMenuByRestaurantId = async (req: Request, res: Response) => {
   const { restaurantId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+  if (!mongoose.Types.ObjectId.isValid(restaurantId.toString())) {
     return res.status(400).json({ message: 'Invalid Restaurant ID format' });
   }
 

@@ -1,5 +1,4 @@
 import express from 'express';
-import passport from '../../controllers/auth/passport/passport'
 
 const router = express.Router();
 
@@ -9,9 +8,9 @@ const AdminSignin = require('../../controllers/auth/admin/signin');
 const FetchInfo = require("../../controllers/auth/admin/fetchinfo");
 const FetchWaiter = require("../../controllers/auth/admin/fetchWaiter");
 const DeleteWaiter = require("../../controllers/auth/admin/delete");
-const authenticateUser = require("../../middleware/middleware");
+const authenticateAdmin = require("../../middleware/adminMiddleware");
 const LogoutAdmin = require("../../controllers/auth/admin/logout");
-const oauthSignin = require("../../controllers/auth/admin/oauth");
+
 
 
 // const AuthController = require("../controllers/AuthController");
@@ -25,15 +24,9 @@ router.post("/SignIn", AdminSignin);
 // router.post("/forgot-password",forgotPsswdController.forgotPsswd);
 // router.post("/verify-code",verifyCodeController.verifyCode);
 // router.post("/reset-password",resetPasswordController.resetPassword);
-router.get("/fetchinfo", authenticateUser,FetchInfo);
-router.get("/fetch-waiter",authenticateUser,FetchWaiter);
-router.delete("/waiter/:id",authenticateUser,DeleteWaiter)
-router.post("/logout",authenticateUser,LogoutAdmin);
-
-router.get("/google-auth", passport.authenticate("google", { scope: ["profile", "email"] }));
-router.get("/google-auth/callback", passport.authenticate("google", { failureRedirect: "/login?error=auth_failed" }), oauthSignin("Google"));
-
-router.get("/x-auth", passport.authenticate("twitter"));
-router.get("/x-auth/callback", passport.authenticate("twitter", { failureRedirect: "/login?error=auth_failed" }), oauthSignin("X"));
+router.get("/fetchinfo", authenticateAdmin,FetchInfo);
+router.get("/fetch-waiter",authenticateAdmin,FetchWaiter);
+router.delete("/waiter/:id",authenticateAdmin,DeleteWaiter)
+router.post("/logout",authenticateAdmin,LogoutAdmin);
 
 module.exports = router;

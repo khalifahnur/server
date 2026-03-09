@@ -11,11 +11,12 @@ const FetchActiveTables = require("../../controllers/reservation/fetchavailablet
 const UserActiveController = require("../../controllers/reservation/userReservation/active");
 const UserCompletedController = require("../../controllers/reservation/userReservation/completed");
 const UserCancelledController = require("../../controllers/reservation/userReservation/cancelled");
+const FetchReservations = require("../../controllers/reservation/dash/reservations");
 const UserUpdateStatus = require("../../controllers/reservation/userReservation/cancelreservation");
 const attachRestaurantId = require("../../middleware/attachRestaurantId");
 router.post("/:userId/reserve/:restaurantId/:fcmToken", ReserveController);
 router.post("/fetched-active", FetchActiveTables);
-router.get("/fetch-all-reservations", attachRestaurantId, GetUserController.getAllUserReservation);
+router.get("/fetch-all-reservations", attachRestaurantId, FetchReservations);
 router.get("/:restaurantId/reservations/active", GetUserController.getUserActiveReservation);
 router.get("/:restaurantId/reservations/cancelled", GetUserController.getUserCancelledReservation);
 router.get("/:userId/completed", UserCompletedController);

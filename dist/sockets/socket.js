@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const cookie_1 = __importDefault(require("cookie"));
-const GenerateSecretKey_1 = __importDefault(require("../lib/GenerateSecretKey"));
+const generateSecretKey_1 = __importDefault(require("../lib/generateSecretKey"));
 const getTotalRevenue = require("../controllers/order/dash/totalrevenue");
 const getTodayActiveReservation = require("../controllers/reservation/dash/todayreservation");
 const tableAvailability = require("../controllers/reservation/dash/tableavailability");
@@ -18,7 +18,7 @@ const SECRET_KEY_REDIS_KEY = "jwt_secret_key";
 const getSecretKey = async () => {
     let secretKey = await redis.get(SECRET_KEY_REDIS_KEY);
     if (!secretKey) {
-        secretKey = (0, GenerateSecretKey_1.default)();
+        secretKey = (0, generateSecretKey_1.default)();
         await redis.set(SECRET_KEY_REDIS_KEY, secretKey);
     }
     return secretKey;
@@ -39,7 +39,7 @@ const setupWebSocket = (io) => {
             // ✅ Verify JWT
             const secretKey = await getSecretKey();
             const decoded = jsonwebtoken_1.default.verify(token, secretKey);
-            const adminId = decoded.userId;
+            const adminId = decoded.adminId;
             console.log("Decoded token:", decoded);
             // Find the admin by userId and get the restaurantId
             const admin = await Admin.findById(adminId);

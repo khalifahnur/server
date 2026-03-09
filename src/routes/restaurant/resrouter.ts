@@ -6,7 +6,7 @@ const router = express.Router();
 const AddContoller = require("../../controllers/restaurant/addrestaurant");
 const AddMenuController = require("../../controllers/restaurant/addmenu");
 const RemoveController = require("../../controllers/restaurant/removemenu");
-const authenticateUser = require("../../middleware/middleware");
+
 const attachRestaurantId = require("../../middleware/attachRestaurantId");
 const UpdateController = require("../../controllers/restaurant/editmenu");
 const getMenu = require("../../controllers/restaurant/getmenurestaurant");
@@ -18,8 +18,10 @@ const FetchResNearMe = require("../../controllers/restaurant/fetchresnearme");
 const PostRecentlyViewed = require("../../controllers/view-recently/view");
 const FetchRecentlyView = require("../../controllers/view-recently/fetchView")
 
+const authenticateAdmin = require("../../middleware/adminMiddleware");
 
-router.post("/addrestaurant", authenticateUser,upload.single("image"), AddContoller);
+
+router.post("/addrestaurant", authenticateAdmin,upload.single("image"), AddContoller);
 
 router.post("/addmenu/:menuType", attachRestaurantId, upload.single("image"), AddMenuController);
 router.delete("/deletemenu/:menuType/:itemId", attachRestaurantId, RemoveController);

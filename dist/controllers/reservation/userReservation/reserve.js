@@ -41,7 +41,7 @@ const createReservation = async (req, res) => {
             });
         }
         const reservationID = (0, GenerateReservationID_1.GenerateReservationID)({
-            restaurantId,
+            restaurantId: restaurantId.toString(),
             bookingFor: data.reservationInfo.bookingFor,
             endTime: data.reservationInfo.endTime,
         });

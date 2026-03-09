@@ -1,21 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import getSecretKey from "../lib/getSecretKey";
-const Admin = require("../models/admin");
 
-interface AuthenticatedRequest extends Request {
-  restaurantId?: string; 
+interface AdminRequest extends Request {
+  adminId?: {
+    id: string;
+  };
 }
 
-const attachRestaurantId = async (
-  req: AuthenticatedRequest,
+const authenticateAdmin = async (
+  req: AdminRequest,
   res: Response,
   next: NextFunction
 ) => {
   const token = req.cookies.admin_auth;
 
   if (!token) {
-    return res.status(401).json({ message: "Access token is required" });
+    return res.status(401).json({ message: "Authentication required" });
   }
 
   try {
@@ -26,18 +27,14 @@ const attachRestaurantId = async (
 
     const secretKey = await getSecretKey(decoded?.adminId);
     const verified = jwt.verify(token, secretKey) as jwt.JwtPayload;
-    const adminId = verified.adminId;
-
-    const admin = await Admin.findById(adminId);
-    if (!admin) {
-      return res.status(404).json({ message: "Admin not found" });
-    }
-
-    req.restaurantId = admin.restaurantId;
+    req.adminId = { id: verified.adminId };
     next();
   } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ message: "Token expired" });
+    }
     res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
-module.exports =  attachRestaurantId; 
+module.exports = authenticateAdmin;

@@ -22,7 +22,7 @@ const updateMenuItem = async (req, res) => {
     }
     try {
         const validMenuTypes = ["breakfast", "lunch", "dinner"];
-        if (!validMenuTypes.includes(menuType)) {
+        if (!validMenuTypes.includes(menuType.toString())) {
             return res.status(400).json({ message: "Invalid menu type" });
         }
         const updatePath = `data.0.menu.${menuType}`;
@@ -44,7 +44,7 @@ const updateMenuItem = async (req, res) => {
             };
         const updatedRestaurant = await Restaurant.findOneAndUpdate({
             _id: restaurantId,
-            [`${updatePath}._id`]: new mongoose_1.default.Types.ObjectId(itemId),
+            [`${updatePath}._id`]: new mongoose_1.default.Types.ObjectId(itemId.toString()),
         }, updateFields, {
             new: true,
         });
@@ -56,7 +56,7 @@ const updateMenuItem = async (req, res) => {
         });
     }
     catch (error) {
-        console.error("Error updating menu item:", error);
+        // console.error("Error updating menu item:", error);
         return res.status(500).json({ message: "Server error", error });
     }
 };

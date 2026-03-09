@@ -1,10 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Restaurant = require("../../models/restaurant");
-const AdminAuth = require("../../models/admin");
+const Admin = require("../../models/admin");
 const UploadImage_1 = require("../../lib/UploadImage");
 const addRestaurantData = async (req, res) => {
+    const admin = req.adminId?.id;
     try {
+        if (!admin) {
+            return res.status(400).json({ error: "Admin not authenticated" });
+        }
         if (!req.body.data) {
             return res.status(400).json({ message: "Data is invalid or empty" });
         }
@@ -23,9 +27,8 @@ const addRestaurantData = async (req, res) => {
         data[0].image = uploadedImageUrl;
         const newRestaurant = new Restaurant({ title, data });
         const savedRestaurant = await newRestaurant.save();
-        const userId = req.user?.id;
-        if (userId) {
-            await AdminAuth.findByIdAndUpdate(userId, {
+        if (admin) {
+            await Admin.findByIdAndUpdate(admin, {
                 restaurantId: savedRestaurant._id,
             });
         }
@@ -35,7 +38,7 @@ const addRestaurantData = async (req, res) => {
         });
     }
     catch (error) {
-        console.error("Error adding restaurant data:", error);
+        console.log("Error adding restaurant info", error);
         res.status(500).json({ message: "Error adding restaurant data", error });
     }
 };

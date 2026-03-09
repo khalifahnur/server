@@ -1,30 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserCancelledReservation = exports.getUserActiveReservation = exports.getAllUserReservation = void 0;
+exports.getUserCancelledReservation = exports.getUserActiveReservation = void 0;
 const Reservation = require("../../models/reservation");
-const getAllUserReservation = async (req, res) => {
-    const restaurantId = req.restaurantId;
-    try {
-        const reservations = await Reservation.find({ "restaurantInfo.restaurantId": restaurantId }, { reservationInfo: 1, status: 1, _id: 0 } // Select only reservationInfo and status
-        );
-        if (!reservations || reservations.length === 0) {
-            return res.status(404).json({ error: "No reservations found" });
-        }
-        const formattedReservations = reservations.map((reservation) => ({
-            _id: reservation._id,
-            reservationInfo: reservation.reservationInfo,
-            status: reservation.status,
-        }));
-        res.status(200).json(formattedReservations);
-    }
-    catch (error) {
-        console.error("Error retrieving reservation:", error);
-        res
-            .status(500)
-            .json({ error: "An error occurred while retrieving the reservation" });
-    }
-};
-exports.getAllUserReservation = getAllUserReservation;
 const getUserActiveReservation = async (req, res) => {
     const { restaurantId } = req.params;
     try {

@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import getSecretKey from "../../../lib/getSecretKey";
 import { verifyPassword } from "../../../lib/hashPassword";
-const sendSigninEmail = require("../../../services/email");
+//const sendSigninEmail = require("../../../services/email");
 const AdminAuth = require("../../../models/admin");
 
 
@@ -26,24 +26,22 @@ const loginAdmin = async (req: Request, res: Response) => {
     }
 
     const secretKey = await getSecretKey(admin._id.toString());
-    const token = jwt.sign({ userId: admin._id }, secretKey, {
+    const token = jwt.sign({ adminId: admin._id }, secretKey, {
       expiresIn: "24h",
     });
 
-    console.log("token form singin",token)
-
-    res.cookie('token', token, {
+    res.cookie('admin_auth', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Only secure in production
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'lax' for local
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       //sameSite: 'none',
       //domain: 'server-production-2ee7.up.railway.app',
       path: '/',
       maxAge: 24 * 60 * 60 * 1000,
     });
+    
 
-    // Send email
-    await sendSigninEmail(email);
+    //await sendSigninEmail(email);
 
     return res.status(200).json({
       message: "Login successful",
@@ -57,8 +55,6 @@ const loginAdmin = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error occurred during login:", error);
-
     const errorMessage =
       error instanceof Error
         ? error.message

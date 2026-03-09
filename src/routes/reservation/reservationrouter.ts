@@ -7,6 +7,7 @@ const FetchActiveTables = require("../../controllers/reservation/fetchavailablet
 const UserActiveController = require("../../controllers/reservation/userReservation/active");
 const UserCompletedController = require("../../controllers/reservation/userReservation/completed");
 const UserCancelledController = require("../../controllers/reservation/userReservation/cancelled");
+const FetchReservations = require("../../controllers/reservation/dash/reservations")
 
 
 const UserUpdateStatus = require("../../controllers/reservation/userReservation/cancelreservation");
@@ -21,7 +22,7 @@ router.post("/fetched-active", FetchActiveTables);
 router.get(
   "/fetch-all-reservations",
   attachRestaurantId,
-  GetUserController.getAllUserReservation
+  FetchReservations
 );
 router.get(
   "/:restaurantId/reservations/active",

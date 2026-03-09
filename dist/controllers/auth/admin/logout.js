@@ -7,19 +7,19 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const getSecretKey_1 = __importDefault(require("../../../lib/getSecretKey"));
 const rotateSecretKey_1 = __importDefault(require("../../../lib/rotateSecretKey"));
 const LogoutAdmin = async (req, res) => {
-    const token = req.cookies?.token;
+    const token = req.cookies?.admin_auth;
     if (!token) {
         return res.status(401).json({ message: "No token provided" });
     }
     try {
         const decoded = jsonwebtoken_1.default.decode(token);
-        if (!decoded?.userId) {
+        if (!decoded?.adminId) {
             return res.status(401).json({ message: "Invalid token structure" });
         }
-        const secretKey = await (0, getSecretKey_1.default)(decoded.userId);
+        const secretKey = await (0, getSecretKey_1.default)(decoded.adminId);
         jsonwebtoken_1.default.verify(token, secretKey);
-        await (0, rotateSecretKey_1.default)(decoded.userId);
-        res.clearCookie("token", {
+        await (0, rotateSecretKey_1.default)(decoded.adminId);
+        res.clearCookie("admin_auth", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",

@@ -1,7 +1,12 @@
 import Redis from "ioredis";
-import generateSecretKey from "./GenerateSecretKey";
+import generateSecretKey from "./generateSecretKey";
+import dotenv from 'dotenv';
 
-const redis = new Redis();
+dotenv.config();
+
+// const redis = new Redis('redis://localhost:6379');
+const redis = new Redis(process.env.REDIS_URL! );
+
 
 const getSecretKey = async (userId:string) => {
   const SECRET_KEY_REDIS_KEY = `user:${userId}:jwt_secret`;

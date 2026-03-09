@@ -7,7 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Restaurant = require("../../models/restaurant");
 const getMenuByRestaurantId = async (req, res) => {
     const { restaurantId } = req.params;
-    if (!mongoose_1.default.Types.ObjectId.isValid(restaurantId)) {
+    if (!mongoose_1.default.Types.ObjectId.isValid(restaurantId.toString())) {
         return res.status(400).json({ message: 'Invalid Restaurant ID format' });
     }
     try {
