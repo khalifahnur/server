@@ -23,7 +23,6 @@ const orderrouter = require("./routes/order/orderroute");
 
 const startReservationCronJob = require("./controllers/reservation/reservationupdates");
 
-
 dotenv.config();
 
 const app = express();
@@ -36,11 +35,8 @@ const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
 const corsOptions = {
-  origin: 
-    //"http://localhost:3000",
-    "https://www.swiftab.co.ke/"
+  origin: "https://www.swiftab.co.ke",
 
-  ,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -49,7 +45,7 @@ const corsOptions = {
 
 const io = new Server(server, {
   cors: {
-    origin: "https://www.swiftab.co.ke/",
+    origin: "https://www.swiftab.co.ke",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -74,7 +70,7 @@ mongoose
   });
 
 const redisClient = createClient({
-  url: process.env.REDIS_URL ,
+  url: process.env.REDIS_URL,
   // url: "redis://localhost:6379",
 });
 
@@ -102,7 +98,6 @@ app.use(morgan("combined"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true, limit: "5mb" }));
 app.use(bodyParser.json({ limit: "5mb" }));
-
 
 app.use("/swiftab/restaurant", restaurantrouter);
 app.use("/swiftab/auth/admin", adminauthrouter);
