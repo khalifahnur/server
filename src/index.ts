@@ -36,11 +36,11 @@ const port = process.env.PORT || 3002;
 const MongodbConn = process.env.MONGODB_CONN || "";
 
 const corsOptions = {
-  origin: [
+  origin: 
     //"http://localhost:3000",
     "https://www.swiftab.co.ke/"
 
-  ],
+  ,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -49,7 +49,7 @@ const corsOptions = {
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://www.swiftab.co.ke/"],
+    origin: "https://www.swiftab.co.ke/",
     methods: ["GET", "POST"],
     credentials: true,
   },
